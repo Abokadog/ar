@@ -1,17 +1,74 @@
 <!DOCTYPE html>
-<html lang="ja">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>
+    <script src="https://aframe.io/releases/1.8.0/aframe.min.js"></script>​
 </head>
-
 <body>
-    <a-scene>
-        <a-box position="0 0 -3" color="skyblue">
-        </a-box>
-    </a-scene>
-</body>
+    <a-scene
+        cursor="rayOrigin:mouse"
+        raycaster="objects: .clickable">
 
+        <a-sky color="steelblue"></a-sky>
+        <a-plane
+            position="0 2 -3"
+            width="2"
+            height="0.7"
+            color="black"
+            opacity="0.5"
+        ></a-plane>
+
+        <a-text
+            value="HP:30"
+            id="hpText"
+            position="0 2 -3"
+            color="white"
+            align="center"
+            scale="1.5 1.5 1.5">
+        </a-text>
+
+        <a-box
+            position="0 0.5 -3"
+            color="skyblue"
+            id="box"
+            class="clickable"
+            animation="
+                property:rotation;
+                from: 0 0.5 -3;
+                to: 0 360 0;
+                loop:true;
+                easing:easeInOutSine;
+                dir:alternate;
+                startEvents: spin
+            "
+        ></a-box>
+    </a-scene>
+
+    <script>
+        let hp = 30;
+
+        const box = document.getElementById("box");
+        const hpText = document.getElementById("hpText");
+
+        function damage(){
+            hp = hp - 3;
+            hpText.setAttribute("value", "HP: " + hp);
+            
+            if (hp <= 0){
+                box.setAttribute("visible", false);
+            }
+            box.setAttribute("animation__damage", {
+                property: "rotation",
+                to: "0 360 0",
+                dur: 500,
+                easing: "easeOutQuad"
+                    }
+                   ); 
+        }
+
+        box.addEventListener("click", damage);
+    </script>
+</body>
 </html>
